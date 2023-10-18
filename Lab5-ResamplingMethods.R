@@ -169,7 +169,7 @@ if (require("naivebayes")) {
 }
 
 # DATASET 1 (Splitting the dataset): Dow Jones Index ----
-stock_ror_dataset <- read_csv(
+PimaIndiansDiabetes <- read_csv(
   "data/transforms/dow_jones_index.csv",
   col_types = cols(
     stock = col_factor(
@@ -209,7 +209,7 @@ stock_ror_dataset <- read_csv(
     date = col_date(format = "%m/%d/%Y")
   )
 )
-summary(stock_ror_dataset)
+summary(PimaIndiansDiabetes)
 
 # The str() function is used to compactly display the structure (variables
 # and data types) of the dataset
