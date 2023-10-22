@@ -213,17 +213,17 @@ summary(PimaIndiansDiabetes)
 
 # The str() function is used to compactly display the structure (variables
 # and data types) of the dataset
-str(stock_ror_dataset)
+str(PimaIndiansDiabetes)
 
 ## 1. Split the dataset ====
 # Define a 75:25 train:test data split of the dataset.
 # That is, 75% of the original data will be used to train the model and
 # 25% of the original data will be used to test the model.
-train_index <- createDataPartition(stock_ror_dataset$stock,
+train_index <- createDataPartition(PimaIndiansDiabetes$stock,
                                    p = 0.75,
                                    list = FALSE)
-stock_ror_dataset_train <- stock_ror_dataset[train_index, ]
-stock_ror_dataset_test <- stock_ror_dataset[-train_index, ]
+PimaIndiansDiabetes_train <- PimaIndiansDiabetes[train_index, ]
+PimaIndiansDiabetes_test <- PimaIndiansDiabetes[-train_index, ]
 
 ## 2. Train a Naive Bayes classifier using the training dataset ----
 
@@ -233,28 +233,28 @@ stock_ror_dataset_test <- stock_ror_dataset[-train_index, ]
 # /attributes) are considered as independent variables that have an effect on
 # the dependent variable (stock).
 
-stock_ror_dataset_model_nb_e1071 <- # nolint
+PimaIndiansDiabetes_model_nb_e1071 <- # nolint
   e1071::naiveBayes(stock ~ quarter + date + open + high + low + close +
                       volume + percent_change_price +
                       percent_change_volume_over_last_wk +
                       previous_weeks_volume + next_weeks_open +
                       next_weeks_close + percent_change_next_weeks_price +
                       days_to_next_dividend + percent_return_next_dividend,
-                    data = stock_ror_dataset_train)
+                    data = PimaIndiansDiabetes_train)
 
 # The above code can also be written as follows to show a case where all the
 # variables are being considered (stock ~ .):
-stock_ror_dataset_model_nb <-
+PimaIndiansDiabetes_model_nb <-
   e1071::naiveBayes(stock ~ .,
-                    data = stock_ror_dataset_train)
+                    data = PimaIndiansDiabetes_train)
 
 ### 2.b. OPTION 2: naiveBayes() function in the caret package ====
 # The second option uses the caret::train() function in the caret package to
 # train a Naive Bayes classifier but without the attributes that have missing
 # values.
-stock_ror_dataset_model_nb_caret <- # nolint
+PimaIndiansDiabetes_model_nb_caret <- # nolint
   caret::train(stock ~ ., data =
-               stock_ror_dataset_train[, c("quarter", "date", "open",
+                 PimaIndiansDiabetes_train[, c("quarter", "date", "open",
                                            "high", "low", "close",
                                            "volume",
                                            "percent_change_price",
@@ -269,8 +269,8 @@ stock_ror_dataset_model_nb_caret <- # nolint
 ## 3. Test the trained model using the testing dataset ----
 ### 3.a. Test the trained e1071 Naive Bayes model using the testing dataset ----
 predictions_nb_e1071 <-
-  predict(stock_ror_dataset_model_nb_e1071,
-          stock_ror_dataset_test[, c("quarter", "date", "open", "high",
+  predict(PimaIndiansDiabetes_model_nb_e1071,
+          PimaIndiansDiabetes_test[, c("quarter", "date", "open", "high",
                                      "low", "close", "volume",
                                      "percent_change_price",
                                      "percent_change_volume_over_last_wk",
@@ -282,8 +282,8 @@ predictions_nb_e1071 <-
 
 ### 3.b. Test the trained caret Naive Bayes model using the testing dataset ----
 predictions_nb_caret <-
-  predict(stock_ror_dataset_model_nb_caret,
-          stock_ror_dataset_test[, c("quarter", "date", "open", "high",
+  predict(PimaIndiansDiabetes_model_nb_caret,
+          PimaIndiansDiabetes_test[, c("quarter", "date", "open", "high",
                                      "low", "close", "volume",
                                      "percent_change_price", "next_weeks_open",
                                      "next_weeks_close",
@@ -296,7 +296,7 @@ predictions_nb_caret <-
 # Please watch the following video first: https://youtu.be/Kdsp6soqA7o
 print(predictions_nb_e1071)
 caret::confusionMatrix(predictions_nb_e1071,
-                       stock_ror_dataset_test[, c("quarter", "date", "open",
+                       PimaIndiansDiabetes_test[, c("quarter", "date", "open",
                                                   "high", "low", "close",
                                                   "volume",
                                                   "percent_change_price",
@@ -309,7 +309,7 @@ caret::confusionMatrix(predictions_nb_e1071,
                                                   "percent_return_next_dividend", # nolint
                                                   "stock")]$stock)
 plot(table(predictions_nb_e1071,
-           stock_ror_dataset_test[, c("quarter", "date", "open", "high", "low",
+           PimaIndiansDiabetes_test[, c("quarter", "date", "open", "high", "low",
                                       "close", "volume", "percent_change_price",
                                       "percent_change_volume_over_last_wk",
                                       "previous_weeks_volume",
@@ -320,9 +320,9 @@ plot(table(predictions_nb_e1071,
                                       "stock")]$stock))
 
 ### 4.b. caret Naive Bayes model and test results using a confusion matrix ----
-print(stock_ror_dataset_model_nb_caret)
+print(PimaIndiansDiabetes_model_nb_caret)
 caret::confusionMatrix(predictions_nb_caret,
-                       stock_ror_dataset_test[, c("quarter", "date", "open",
+                       PimaIndiansDiabetes_test[, c("quarter", "date", "open",
                                                   "high", "low", "close",
                                                   "volume",
                                                   "percent_change_price",
@@ -335,7 +335,7 @@ caret::confusionMatrix(predictions_nb_caret,
                                                   "percent_return_next_dividend", # nolint
                                                   "stock")]$stock)
 plot(table(predictions_nb_caret,
-           stock_ror_dataset_test[, c("quarter", "date", "open", "high", "low",
+           PimaIndiansDiabetes_test[, c("quarter", "date", "open", "high", "low",
                                       "close", "volume", "percent_change_price",
                                       "percent_change_volume_over_last_wk",
                                       "previous_weeks_volume",
@@ -639,6 +639,8 @@ caret::confusionMatrix(predictions_nb_loocv, churn_dateset_test$Churn)
 ## National Institute of Diabetes and Digestive and Kidney Diseases. (1999). Pima Indians Diabetes Dataset [Dataset]. UCI Machine Learning Repository. https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database # nolint ----
 
 ## Yeh, I.-C. (2016). Default of credit card clients (Version 1) [Dataset]. University of California, Irvine (UCI) Machine Learning Repository. https://doi.org/10.24432/C55S3H # nolint ----
+
+##Smith, J.W., Everhart, J.E., Dickson, W.C., Knowler, W.C., & Johannes, R.S. (1988). Using the ADAP learning algorithm to forecast the onset of diabetes mellitus. 
 
 # **Required Lab Work Submission** ----
 ## Part A ----
